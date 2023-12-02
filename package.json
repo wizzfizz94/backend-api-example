@@ -12,6 +12,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@koa/router": "^12.0.0",
+    "basic-auth": "^2.0.1",
     "busboy": "^1.6.0",
     "form-data": "^4.0.0",
     "koa": "^2.13.4"
