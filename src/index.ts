@@ -3,6 +3,8 @@ import * as Router from "@koa/router";
 import {uploadFile} from "./routes/upload-file";
 import {auth} from "./middleware/auth";
 
+const { koaBody } = require('koa-body');
+
 const PORT = 3000;
 
 const app = new Koa();
@@ -16,6 +18,7 @@ imageRouter
 
 
 app
+    .use(koaBody({ multipart: true }))
     .use(auth)
     .use(imageRouter.routes())
     .listen(PORT, () => console.info(`Listing on port ${PORT}`))
