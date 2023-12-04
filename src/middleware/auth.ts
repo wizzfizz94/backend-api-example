@@ -1,18 +1,17 @@
-import {Middleware} from "koa";
-import {Unauthorized} from "http-errors";
+import {type Middleware} from 'koa';
+import {Unauthorized} from 'http-errors';
+import * as basicAuth from 'basic-auth';
 
-const basicAuth = require('basic-auth');
+const username = 'guest';
+const password = 'password';
 
-const username: string = "guest";
-const password: string = "password";
+export const auth: Middleware
+= async (ctx, next) => {
+	const user = basicAuth(ctx.req);
 
-export const auth: Middleware =
-    async (ctx, next) => {
-        const user = basicAuth(ctx);
+	if (user && user.name === username && user.pass === password) {
+		return next();
+	}
 
-        if (user && user.name === username && user.pass === password) {
-            return next();
-        }
-        
-        throw new Unauthorized();
-    };
+	throw new Unauthorized();
+};
