@@ -1,6 +1,8 @@
 # Authentication
 Authentication was done using basic auth. In production I would move towards JWT or something more secure but the outline asked for the base minimum solution so I used basic auth.
 
+Username and password are stored in the `.env` file which is git ignores. In production these would be stored in a database such as mysql.
+
 # Image upload
 Uses a direct file upload using multipart/form-data. Where the image is attached to the `file` form key. Originally I built the endpoint to handle multiple files (see history) but I simplified it to only handle a single file as this was more concise.
 
