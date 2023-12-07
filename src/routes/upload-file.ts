@@ -4,6 +4,7 @@ import {type File} from 'formidable';
 import {createReadStream} from 'fs';
 import {NotFound, InternalServerError} from 'http-errors';
 import {randomUUID} from 'crypto';
+import config from '../config';
 
 const client = new S3Client({});
 
@@ -34,7 +35,7 @@ export async function uploadFileToS3(file: {filepath: string; originalFilename: 
 	const body = createReadStream(file.filepath);
 
 	const command = new PutObjectCommand({
-		Bucket: 'backend-challenge-image-uploads1',
+		Bucket: config.bucketName,
 		Key: randomUUID(),
 		Body: body,
 		Metadata: {

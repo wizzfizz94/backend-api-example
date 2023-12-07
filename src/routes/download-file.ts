@@ -1,8 +1,9 @@
 import {type Context, type Middleware} from 'koa';
 import {GetObjectCommand, S3Client, S3ServiceException} from '@aws-sdk/client-s3';
 import {InternalServerError, NotFound} from 'http-errors';
+import config from '../config';
 
-const client = new S3Client({});
+const client = new S3Client(config.s3Config);
 
 export const downloadFile: Middleware
 = async (ctx: Context) => {
@@ -24,7 +25,7 @@ export const downloadFile: Middleware
 
 export async function downloadFileFromS3(id: string) {
 	const command = new GetObjectCommand({
-		Bucket: 'backend-challenge-image-uploads',
+		Bucket: config.bucketName,
 		Key: id,
 	});
 	return client.send(command);
