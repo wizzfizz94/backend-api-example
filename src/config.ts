@@ -1,8 +1,8 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
 const config = {
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD
-}
+	username: process.env.USERNAME,
+	password: process.env.PASSWORD,
+};
 
 export default config;

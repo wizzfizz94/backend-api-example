@@ -22,7 +22,8 @@ module.exports = {
 			],
             rules: {
                 'no-await-in-loop': 'off',
-                '@typescript-eslint/naming-convention': 'off'
+                '@typescript-eslint/naming-convention': 'off',
+				'no-return-assign': 'off'
             },
 			files: [
 				'*.ts',
