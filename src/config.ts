@@ -5,7 +5,7 @@ const config = {
 	password: process.env.PASSWORD,
 	bucketName: process.env.BUCKET_NAME,
 	s3Config: {
-		region: 'ap-southeast-2',
+		region: process.env.AWS_REGION,
 		credentials: {
 			accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
 			secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
