@@ -2,8 +2,8 @@ import {type Context, type Middleware} from 'koa';
 import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
 import {type File} from 'formidable';
 import {createReadStream} from 'fs';
-import {NotFound} from 'http-errors';
-import { randomUUID } from 'crypto';
+import {NotFound, InternalServerError} from 'http-errors';
+import {randomUUID} from 'crypto';
 
 const client = new S3Client({});
 
@@ -14,10 +14,15 @@ export const uploadFile: Middleware
 			? ctx.request.files.file[0]
 			: ctx.request.files.file;
 
-		await uploadFileToS3({
-			filepath: file.filepath,
-			originalFilename: file.originalFilename ? file.originalFilename : 'unkown',
-		});
+		try {
+			await uploadFileToS3({
+				filepath: file.filepath,
+				originalFilename: file.originalFilename ? file.originalFilename : 'unkown',
+			});
+		} catch (error) {
+			console.error(error);
+			throw new InternalServerError('Could not connect to database');
+		}
 
 		return ctx.body = 'Image uploaded successfully';
 	}
@@ -29,12 +34,12 @@ export async function uploadFileToS3(file: {filepath: string; originalFilename: 
 	const body = createReadStream(file.filepath);
 
 	const command = new PutObjectCommand({
-		Bucket: 'backend-challenge-image-uploads',
+		Bucket: 'backend-challenge-image-uploads1',
 		Key: randomUUID(),
 		Body: body,
 		Metadata: {
-			Name: `${Date.now().toString()}-${file.originalFilename}`
-		}
+			Name: `${Date.now().toString()}-${file.originalFilename}`,
+		},
 	});
 
 	await client.send(command);
