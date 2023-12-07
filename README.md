@@ -3,10 +3,21 @@ Authentication was done using basic auth. In production I would move towards JWT
 
 Username and password are stored in the `.env` file which git ignores. In production these would be stored in a database such as mysql.
 
-# Image upload
-Uses a direct file upload using multipart/form-data. Where the image is attached to the `file` form key. Originally I built the endpoint to handle multiple files (see history) but I simplified it to only handle a single file as this was more concise.
+# Image Upload
+POST request to the `/images` endpoint. Uses a direct file upload using multipart/form-data. Where the image is attached to the `file` form key. Originally I built the endpoint to handle multiple files (see history) but I simplified it to only handle a single file as this was more concise.
 
 The uploaded file is parsed by the koa-body middleware and then uploaded to a cloud S3 bucket. This functionality has been isolated to the `uploadFileToS3` function so other data storage solutions could be implemented in the future.
+
+Images are stored as objects with the key being a UUID, allowing the solution to store and index any image. The image name is stored in the metadata feild so it can be recovered when a request to download the image is made.
+
+Error handling handles when the database is unreachable. The route responds with an internal server error in this situation. In the future I would expand on this depending on the context.
+
+# Image Download
+GET request to the `/images/:id` endpoint. Where the id is the UUID of the image.
+
+The id in the request params is parsed to the `downloadFileFromS3` function which makes a request to the S3 bucket for the image with this UUID. The response in sent as an attachment using the orignal filename. This isolated function also allows the solution to be modified for differrent storage solutions.
+
+Error handling handles when the database is unreachable or when the image cannot be found. When the image is not found in the S3 a 404 not found resposne is sent. Otherwise a 500 internal server error is returns. This could be expanded on depending on the context of the solution.
 
 # Testing
 Unit testing is done with ts-jest and jest.
