@@ -1,3 +1,15 @@
+# Prerequisites
+`docker`
+`docker-compose`
+
+# Run Server
+`docker-compose up`
+
+# Run Tests
+`docker-compose run web npm test`
+
+Note: Running tests and server using docker-compose done to ensure environment is always constant. 
+
 # Authentication
 Authentication was done using basic auth. In production I would move towards JWT or something more secure but the outline asked for the base minimum solution so I used basic auth.
 
