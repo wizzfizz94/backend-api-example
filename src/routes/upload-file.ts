@@ -6,7 +6,7 @@ import {NotFound, InternalServerError} from 'http-errors';
 import {randomUUID} from 'crypto';
 import config from '../config';
 
-const client = new S3Client({});
+const client = new S3Client(config.s3Config);
 
 export const uploadFile: Middleware
 = async (ctx: Context) => {
