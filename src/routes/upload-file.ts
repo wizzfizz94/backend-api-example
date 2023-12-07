@@ -3,6 +3,7 @@ import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
 import {type File} from 'formidable';
 import {createReadStream} from 'fs';
 import {NotFound} from 'http-errors';
+import { randomUUID } from 'crypto';
 
 const client = new S3Client({});
 
@@ -29,8 +30,11 @@ export async function uploadFileToS3(file: {filepath: string; originalFilename: 
 
 	const command = new PutObjectCommand({
 		Bucket: 'backend-challenge-image-uploads',
-		Key: `${Date.now().toString()}-${file.originalFilename}`,
+		Key: randomUUID(),
 		Body: body,
+		Metadata: {
+			Name: `${Date.now().toString()}-${file.originalFilename}`
+		}
 	});
 
 	await client.send(command);
