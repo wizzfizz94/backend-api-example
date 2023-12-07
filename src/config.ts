@@ -1,8 +1,7 @@
 import 'dotenv/config';
 
 const config = {
-	username: process.env.USERNAME,
-	password: process.env.PASSWORD,
+	jwtSecret: process.env.JWT_SECRET ?? '',
 	bucketName: process.env.BUCKET_NAME,
 	s3Config: {
 		region: process.env.AWS_REGION,

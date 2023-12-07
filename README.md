@@ -11,11 +11,11 @@
 Note: Running tests and server using docker-compose done to ensure environment is always constant. 
 
 # Authentication
-Authentication was done using basic auth. In production I would move towards JWT or something more secure but the outline asked for the base minimum solution so I used basic auth.
+Authentication originally done using basic auth and then changed to JWT for increased security.
 
-Username and password are stored in the `.env` file which git ignores. In production these would be stored in a database such as mysql with passwords hashed for security.
+The jwt secret is stored in the `.env` file which git ignores.
 
-S3 access ID and key are also stored in the `.env` file. I created a user and a IAM policy that only allows Put and Get commands on the s3 bucket. The bucket name is also defined here. 
+S3 access ID and key are also stored in the `.env` file. I created a user and a IAM policy that only allows Put List and Get commands on the s3 bucket. The bucket name is also defined there. 
 
 # Image Upload
 POST request to the `/images` endpoint. Uses a direct file upload using multipart/form-data. Where the image is attached to the `file` form key. Originally I built the endpoint to handle multiple files (see history) but I simplified it to only handle a single file as this was more concise error handling.
