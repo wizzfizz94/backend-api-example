@@ -1,7 +1,7 @@
 import {type Context, type Middleware} from 'koa';
 import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
 import {type File} from 'formidable';
-import {createReadStream} from 'fs';
+import {createReadStream, type ReadStream} from 'fs';
 import {NotFound, InternalServerError} from 'http-errors';
 import {randomUUID} from 'crypto';
 import config from '../config';
@@ -32,7 +32,15 @@ export const uploadFile: Middleware
 };
 
 export async function uploadFileToS3(file: {filepath: string; originalFilename: string}) {
-	const body = createReadStream(file.filepath);
+	const body: ReadStream = await new Promise((f, r) => {
+		const fileStream = createReadStream(file.filepath);
+		fileStream.on('error', e => {
+			r(e);
+		});
+		fileStream.on('ready', () => {
+			f(fileStream);
+		});
+	});
 
 	const command = new PutObjectCommand({
 		Bucket: config.bucketName,
@@ -43,5 +51,5 @@ export async function uploadFileToS3(file: {filepath: string; originalFilename: 
 		},
 	});
 
-	await client.send(command);
+	return client.send(command);
 }
