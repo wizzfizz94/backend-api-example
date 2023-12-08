@@ -1,10 +1,11 @@
 import * as Koa from 'koa';
 import * as Router from '@koa/router';
-import {uploadFile} from './routes/upload-file';
 import {koaBody} from 'koa-body';
 import * as jwt from 'koa-jwt';
-import {downloadFile} from './routes/download-file';
 import config from './config';
+import {uploadFile} from './routes/upload-file';
+import {downloadFile} from './routes/download-file';
+import {listFiles} from './routes/list-files';
 
 const PORT = 3000;
 const app = new Koa();
@@ -13,6 +14,7 @@ const imageRouter = new Router();
 imageRouter
 	.prefix('/images')
 	.post('/', uploadFile)
+	.get('/', listFiles)
 	.get('/:id', downloadFile);
 
 app
