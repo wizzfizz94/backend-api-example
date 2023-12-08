@@ -1,12 +1,11 @@
 import {type Context, type Middleware} from 'koa';
-import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
+import {PutObjectCommand} from '@aws-sdk/client-s3';
 import {type File} from 'formidable';
 import {createReadStream, type ReadStream} from 'fs';
 import {NotFound, InternalServerError} from 'http-errors';
 import {randomUUID} from 'crypto';
 import config from '../config';
-
-const client = new S3Client(config.s3Config);
+import client from '../client';
 
 export const uploadFile: Middleware
 = async (ctx: Context) => {

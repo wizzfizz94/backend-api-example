@@ -1,9 +1,8 @@
 import {type Context, type Middleware} from 'koa';
-import {GetObjectCommand, S3Client, S3ServiceException} from '@aws-sdk/client-s3';
+import {GetObjectCommand, S3ServiceException} from '@aws-sdk/client-s3';
 import {InternalServerError, NotFound} from 'http-errors';
 import config from '../config';
-
-const client = new S3Client(config.s3Config);
+import client from '../client';
 
 export const downloadFile: Middleware
 = async (ctx: Context) => {
