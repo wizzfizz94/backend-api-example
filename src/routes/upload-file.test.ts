@@ -9,9 +9,9 @@ describe('uploadFilesToS3 tests', () => {
 		});
 		expect(res.$metadata.httpStatusCode).toBe(200);
 	});
-	it('Should throw error when using unkown file path', async () => {
+	it('Should throw error when using unknown file path', async () => {
 		await expect(uploadFileToS3({
-			filepath: path.resolve(__dirname, '../../unknow/file/path'),
+			filepath: path.resolve(__dirname, '../../unknown/file/path'),
 			originalFilename: 'test-image.png',
 		})).rejects.toThrow();
 	});

@@ -11,7 +11,7 @@ export const downloadFile: Middleware
 	try {
 		const res = await downloadFileFromS3(id);
 		ctx.response.set('content-type', 'image');
-		ctx.response.set('content-disposition', `attachment; filename=${res.Metadata ? res.Metadata.name : 'unkown'}`);
+		ctx.response.set('content-disposition', `attachment; filename=${res.Metadata ? res.Metadata.name : 'unknown'}`);
 		ctx.body = res.Body;
 	} catch (error) {
 		console.error(error);

@@ -18,7 +18,7 @@ export const uploadFile: Middleware
 		try {
 			await uploadFileToS3({
 				filepath: file.filepath,
-				originalFilename: file.originalFilename ? file.originalFilename : 'unkown',
+				originalFilename: file.originalFilename ? file.originalFilename : 'unknown',
 			});
 		} catch (error) {
 			console.error(error);
