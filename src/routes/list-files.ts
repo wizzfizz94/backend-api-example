@@ -2,6 +2,7 @@ import {type Context, type Middleware} from 'koa';
 import {ListObjectsV2Command} from '@aws-sdk/client-s3';
 import client from '../client';
 import config from '../config';
+import {InternalServerError} from 'http-errors';
 
 export const listFiles: Middleware
 = async (ctx: Context) => {
@@ -26,6 +27,7 @@ export async function listFilesFromS3(): Promise<string[]> {
 		}
 	} catch (err) {
 		console.error(err);
+		throw new InternalServerError();
 	}
 
 	return imageIds;
