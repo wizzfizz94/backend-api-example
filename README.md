@@ -33,6 +33,13 @@ The id in the request params is parsed to the `downloadFileFromS3` function whic
 
 Error handling handles when the database is unreachable or when the image cannot be found. When the image is not found in the S3 a 404 not found resposne is sent. Otherwise a 500 internal server error is returns. This could be expanded on depending on the context of the solution.
 
+# List Files
+GET request to `/images` endpoint will return a list of image id's. This can be used by a client to select an image to download by id.
+
+`listFilesFromS3` returns an array of uuids that are sent in the response. Again, isolated to a separate fucntion so alternative storage solutions can be added.
+
+A 500 error is passed to the client when an issue with s3 connection occurs.
+
 # Testing
 Unit testing is done with ts-jest and jest.
 
