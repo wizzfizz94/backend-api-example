@@ -1,10 +1,12 @@
+import {createRouteSpec} from 'koa-zod-router';
+import {z} from 'zod';
 import {type Context, type Middleware} from 'koa';
 import {ListObjectsV2Command} from '@aws-sdk/client-s3';
 import client from '../client';
 import config from '../config';
 import {InternalServerError} from 'http-errors';
 
-export const listFiles: Middleware
+const listFiles: Middleware
 = async (ctx: Context) => {
 	const imageIds = await listFilesFromS3();
 	return ctx.body = imageIds;
@@ -32,3 +34,12 @@ export async function listFilesFromS3(): Promise<string[]> {
 
 	return imageIds;
 }
+
+export const listFilesRoute = createRouteSpec({
+	method: 'get',
+	path: '/images',
+	handler: listFiles,
+	validate: {
+		response: z.array(z.string()),
+	},
+});

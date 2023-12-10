@@ -1,21 +1,27 @@
 import * as Koa from 'koa';
-import * as Router from '@koa/router';
+// Import * as Router from '@koa/router';
 import {koaBody} from 'koa-body';
 import * as jwt from 'koa-jwt';
+import zodRouter from 'koa-zod-router';
 import config from './config';
-import {uploadFile} from './routes/upload-file';
-import {downloadFile} from './routes/download-file';
-import {listFiles} from './routes/list-files';
+import {uploadFileRoute} from './routes/upload-file';
+import {downloadFileRoute} from './routes/download-file';
+import {listFilesRoute} from './routes/list-files';
 
 const PORT = 3000;
 const app = new Koa();
-const imageRouter = new Router();
+// Const imageRouter = new Router();
 
-imageRouter
-	.prefix('/images')
-	.post('/', uploadFile)
-	.get('/', listFiles)
-	.get('/:id', downloadFile);
+// imageRouter
+// 	.prefix('/images')
+// 	.post('/', uploadFile)
+// 	.get('/', listFiles)
+// 	.get('/:id', downloadFile);
+
+const imageRouter = zodRouter();
+imageRouter.register(uploadFileRoute);
+imageRouter.register(listFilesRoute);
+imageRouter.register(downloadFileRoute);
 
 app
 	.use(jwt({secret: config.jwtSecret}))

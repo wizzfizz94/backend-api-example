@@ -1,13 +1,15 @@
+import {createRouteSpec, zFile} from 'koa-zod-router';
+import {z} from 'zod';
 import {type Context, type Middleware} from 'koa';
 import {PutObjectCommand} from '@aws-sdk/client-s3';
 import {type File} from 'formidable';
-import {createReadStream, type ReadStream} from 'fs';
-import {NotFound, InternalServerError} from 'http-errors';
+import {type ReadStream, createReadStream} from 'fs';
+import {InternalServerError, NotFound} from 'http-errors';
 import {randomUUID} from 'crypto';
 import config from '../config';
 import client from '../client';
 
-export const uploadFile: Middleware
+const uploadFile: Middleware
 = async (ctx: Context) => {
 	if (ctx.request.files?.file) {
 		const file: File = Array.isArray(ctx.request.files.file)
@@ -52,3 +54,14 @@ export async function uploadFileToS3(file: {filepath: string; originalFilename: 
 
 	return client.send(command);
 }
+
+export const uploadFileRoute = createRouteSpec({
+	method: 'post',
+	path: '/images',
+	handler: uploadFile,
+	validate: {
+		files: z.object({
+			file: zFile(),
+		}),
+	},
+});

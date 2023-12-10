@@ -1,10 +1,13 @@
 import {type Context, type Middleware} from 'koa';
+import {createRouteSpec} from 'koa-zod-router';
+import {z} from 'zod';
 import {GetObjectCommand, S3ServiceException} from '@aws-sdk/client-s3';
 import {InternalServerError, NotFound} from 'http-errors';
 import config from '../config';
 import client from '../client';
+import {Readable} from 'node:stream';
 
-export const downloadFile: Middleware
+const downloadFile: Middleware
 = async (ctx: Context) => {
 	const id: string = typeof ctx.params.id === 'string' ? ctx.params.id as string : '';
 	try {
@@ -29,3 +32,13 @@ export async function downloadFileFromS3(id: string) {
 	});
 	return client.send(command);
 }
+
+export const downloadFileRoute = createRouteSpec({
+	method: 'get',
+	path: '/images/:id',
+	handler: downloadFile,
+	validate: {
+		params: z.object({id: z.string().uuid()}),
+		response: z.instanceof(Readable),
+	},
+});
