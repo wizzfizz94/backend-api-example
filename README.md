@@ -1,14 +1,25 @@
 # Prerequisites
 `docker`
 `docker-compose`
+`aws account`
 
-# Run Server
+# Setup
+1. create a S3 bucket using AWS console
+2. create a AWS IAM policy for the bucket, assign Get Put and List permissions for the bucket *and* its contents made in step 1 (see `sample-iam-policy.json` for exact config, replace `bucket-name` with your buckets name)
+3. create a AWS user and assign the IAM policy in step 2 to them.
+4. Generate access keys for the user and place the access key id, access key, bucket name and aws region in the `.env` file of the project. `sample.env` shows the naming convention needed for these variables
+5. Generate a JWT secret and place it in the .env file (see `sample.env` for naming convention)
+
+# Build and Run Server
 `docker-compose up`
 
 # Run Tests
 `docker-compose run web npm test`
 
-Note: Running tests and server using docker-compose done to ensure environment is always constant. 
+Note: Running tests and server using docker-compose done to ensure system environment is always constant.
+
+# Data Storage
+For data storage I decided to use AWS S3 as a NoSQL database. I wanted to create a solution using serverless technology. S3 provided a simple data storage solution for image downloading and uploading.
 
 # Authentication
 Authentication originally done using basic auth and then changed to JWT for increased security.
@@ -46,4 +57,3 @@ Unit testing is done with ts-jest and jest.
 The unit test for uploadFileToS3 passes as long as an error is not thrown by the function. It uses a test image place at the project root. I ran `git update-index --assume-unchanged test-image.png` so git won't diff this image.
 
 For functional testing I would have used [supertest](https://github.com/ladjs/supertest) and ts-jest to test the API and placed the test cases in `src/index.test.ts`.
-
