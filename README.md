@@ -33,21 +33,21 @@ POST request to the `/images` endpoint. Uses a direct file upload using multipar
 
 The uploaded file is parsed by the koa-body middleware and then uploaded to a cloud S3 bucket. This functionality has been isolated to the `uploadFileToS3` function so other data storage solutions could be implemented in the future.
 
-Images are stored as objects with the key being a UUID, allowing the solution to store and index any image. The image name is stored in the metadata feild so it can be recovered when a request to download the image is made.
+Images are stored as objects with the key being a UUID, allowing the solution to store and index any image. The image name is stored in the metadata field so it can be recovered when a request to download the image is made.
 
 Error handling handles when the database is unreachable. The route responds with an internal server error in this situation. In the future I would expand on this depending on the context.
 
 # Image Download
 GET request to the `/images/:id` endpoint. Where the id is the UUID of the image.
 
-The id in the request params is parsed to the `downloadFileFromS3` function which makes a request to the S3 bucket for the image with this UUID. The response in sent as an attachment using the orignal filename. This isolated function also allows the solution to be modified for differrent storage solutions.
+The id in the request params is parsed to the `downloadFileFromS3` function which makes a request to the S3 bucket for the image with this UUID. The response in sent as an attachment using the original filename. This isolated function also allows the solution to be modified for different storage solutions.
 
-Error handling handles when the database is unreachable or when the image cannot be found. When the image is not found in the S3 a 404 not found resposne is sent. Otherwise a 500 internal server error is returns. This could be expanded on depending on the context of the solution.
+Error handling handles when the database is unreachable or when the image cannot be found. When the image is not found in the S3 a 404 not found response is sent. Otherwise a 500 internal server error is returns. This could be expanded on depending on the context of the solution.
 
 # List Files
 GET request to `/images` endpoint will return a list of image id's. This can be used by a client to select an image to download by id.
 
-`listFilesFromS3` returns an array of uuids that are sent in the response. Again, isolated to a separate fucntion so alternative storage solutions can be added.
+`listFilesFromS3` returns an array of uuids that are sent in the response. Again, isolated to a separate function so alternative storage solutions can be added.
 
 A 500 error is passed to the client when an issue with s3 connection occurs.
 
@@ -57,3 +57,8 @@ Unit testing is done with ts-jest and jest.
 The unit test for uploadFileToS3 passes as long as an error is not thrown by the function. It uses a test image place at the project root. I ran `git update-index --assume-unchanged test-image.png` so git won't diff this image.
 
 For functional testing I would have used [supertest](https://github.com/ladjs/supertest) and ts-jest to test the API and placed the test cases in `src/index.test.ts`.
+
+AWS client calls where mocked using Jests mock functionality. This was done to ensure properly isolated unit tests.
+
+# Input Validation
+API input validation was done to ensure the API could handle any inputs. This was implemented using [zod](https://github.com/colinhacks/zod) and [koa-zod-router](https://github.com/JakeFenley/koa-zod-router).
