@@ -1,5 +1,10 @@
 import {uploadFileToS3} from './upload-file';
 import * as path from 'path';
+import client from '../client';
+
+jest.mock('../client');
+const mockedClient = client as jest.Mocked<typeof client>
+mockedClient.send.mockImplementation(() => Promise.resolve({$metadata: {httpStatusCode: 200}}))
 
 describe('uploadFilesToS3 tests', () => {
 	it('Should complete without errors', async () => {
